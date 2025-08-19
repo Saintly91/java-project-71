@@ -18,6 +18,6 @@ public class Differ {
 
         System.out.println(data1);
         System.out.println(data2);
-        return "";
+        return data1.toString() + data2.toString();
     }
 }
