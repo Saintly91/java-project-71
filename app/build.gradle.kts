@@ -1,7 +1,9 @@
 plugins {
     id("java")
-    id("com.github.ben-manes.versions") version "0.52.0"
     id("application")
+    id("checkstyle")
+    id("com.github.ben-manes.versions") version "0.52.0"
+    id("org.sonarqube") version "6.3.1.5724"
 }
 
 application {
@@ -25,6 +27,19 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
 tasks.withType<JavaCompile> {
     options.compilerArgs.add("-parameters")
+}
+
+checkstyle {
+    toolVersion = "10.12.0"
+    configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "Saintly91_java-project-71")
+        property("sonar.organization", "saintly91")
+    }
 }

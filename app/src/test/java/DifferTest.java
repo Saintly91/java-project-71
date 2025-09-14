@@ -1,6 +1,8 @@
 import hexlet.code.Differ;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DifferTest {
 
@@ -23,7 +25,7 @@ public class DifferTest {
 
         assertTrue(result.contains("hexlet.io"));
         assertTrue(result.contains("timeout"));
-        }
+    }
 
     @Test
     void testGenerateShowDiff() throws Exception {
@@ -44,4 +46,4 @@ public class DifferTest {
 
         assertEquals(expected.trim(), result.trim());
     }
-    }
+}

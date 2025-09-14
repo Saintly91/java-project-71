@@ -14,8 +14,8 @@ public class Differ {
     public static String generate(String filePath1, String filePath2) throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> data1 = mapper.readValue(Files.readString(Path.of(filePath1)), new TypeReference<>() {});
-        Map<String, Object> data2 = mapper.readValue(Files.readString(Path.of(filePath2)), new TypeReference<>() {});
+        Map<String, Object> data1 = mapper.readValue(Files.readString(Path.of(filePath1)), new TypeReference<>() { });
+        Map<String, Object> data2 = mapper.readValue(Files.readString(Path.of(filePath2)), new TypeReference<>() { });
 
         Set<String> allKeys = new TreeSet<>();
         allKeys.addAll(data1.keySet());
