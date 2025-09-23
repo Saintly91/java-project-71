@@ -4,6 +4,7 @@ plugins {
     id("checkstyle")
     id("com.github.ben-manes.versions") version "0.52.0"
     id("org.sonarqube") version "6.3.1.5724"
+    id("jacoco")
 }
 
 application {
@@ -37,9 +38,30 @@ checkstyle {
     configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
 }
 
+jacoco {
+    toolVersion = "0.8.13"
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.required.set(true)
+    }
+}
+
 sonarqube {
     properties {
         property("sonar.projectKey", "Saintly91_java-project-71")
         property("sonar.organization", "saintly91")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.junit.reportPaths", "build/test-results/test")
+        property("sonar.java.coveragePlugin", "jacoco")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
     }
+}
+
+tasks.sonar {
+    dependsOn(tasks.jacocoTestReport)
 }

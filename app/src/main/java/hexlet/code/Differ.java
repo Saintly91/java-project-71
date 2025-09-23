@@ -3,6 +3,7 @@ package hexlet.code;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Differ {
-    public static String generate(String filePath1, String filePath2) throws Exception {
+    public static String generate(String filePath1, String filePath2) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> data1 = mapper.readValue(Files.readString(Path.of(filePath1)), new TypeReference<>() { });
