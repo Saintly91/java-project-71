@@ -26,7 +26,7 @@
 git clone https://github.com/Saintly91/java-project-71.git
 cd java-project-71
 ./gradlew installDist
-
+```
 ## ▶️ Использование
 
 Пример запуска для JSON:
