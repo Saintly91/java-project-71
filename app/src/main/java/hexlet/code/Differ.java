@@ -1,38 +1,22 @@
 package hexlet.code;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Differ {
     public static String generate(String filePath1, String filePath2) throws Exception {
+        return generate(filePath1, filePath2, "stylish");
+    }
+
+    public static String generate(String filePath1, String filePath2, String format) throws Exception {
 
         Map<String, Object> data1 = Parser.parse(filePath1);
         Map<String, Object> data2 = Parser.parse(filePath2);
 
-        Set<String> allKeys = new TreeSet<>();
-        allKeys.addAll(data1.keySet());
-        allKeys.addAll(data2.keySet());
+        List<DiffEntry> diff = DiffBuilder.build(data1, data2);
 
-        StringBuilder result = new StringBuilder("{\n");
-        for (String key : allKeys) {
-            Object value1 = data1.get(key);
-            Object value2 = data2.get(key);
-
-            if (data1.containsKey(key) && !data2.containsKey(key)) {
-                result.append("  - ").append(key).append(": ").append(value1).append("\n");
-            } else if (!data1.containsKey(key) && data2.containsKey(key)) {
-                result.append("  + ").append(key).append(": ").append(value2).append("\n");
-            } else if (Objects.equals(value1, value2)) {
-                result.append("    ").append(key).append(": ").append(value1).append("\n");
-            } else {
-                result.append("  - ").append(key).append(": ").append(value1).append("\n");
-                result.append("  + ").append(key).append(": ").append(value2).append("\n");
-            }
+        if (format == null || format.isBlank() || format.equalsIgnoreCase("stylish")) {
+            return StylishFormatter.format(diff);
         }
-
-        result.append("}");
-        return result.toString();
+        throw new IllegalArgumentException("Unknown format: " + format);
     }
 }
