@@ -14,9 +14,6 @@ public class Differ {
 
         List<DiffEntry> diff = DiffBuilder.build(data1, data2);
 
-        if (format == null || format.isBlank() || format.equalsIgnoreCase("stylish")) {
-            return StylishFormatter.format(diff);
-        }
-        throw new IllegalArgumentException("Unknown format: " + format);
+        return Formatter.format(format, diff);
     }
 }
