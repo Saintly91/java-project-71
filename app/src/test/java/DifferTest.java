@@ -1,9 +1,12 @@
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.Differ;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DifferTest {
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
     void testGenerateJsonDiff() throws Exception {
@@ -103,7 +106,72 @@ public class DifferTest {
         """;
 
         String result = Differ.generate(file1, file2, "plain");
-
         assertEquals(expected.trim(), result.trim());
+    }
+
+    @Test
+    void testJsonFormatterWithJsonFiles() throws Exception {
+        String file1 = "src/test/resources/file1.json";
+        String file2 = "src/test/resources/file2.json";
+
+        String actual = Differ.generate(file1, file2, "json");
+        assertNotNull(actual);
+
+        String expected = """
+                [
+                  {"key":"chars1","status":"unchanged","oldValue":["a","b","c"],"newValue":["a","b","c"]},
+                  {"key":"chars2","status":"changed","oldValue":["d","e","f"],"newValue":false},
+                  {"key":"checked","status":"changed","oldValue":false,"newValue":true},
+                  {"key":"default","status":"changed","oldValue":null,"newValue":["value1","value2"]},
+                  {"key":"id","status":"changed","oldValue":45,"newValue":null},
+                  {"key":"key1","status":"removed","oldValue":"value1","newValue":null},
+                  {"key":"key2","status":"added","oldValue":null,"newValue":"value2"},
+                  {"key":"numbers1","status":"unchanged","oldValue":[1,2,3,4],"newValue":[1,2,3,4]},
+                  {"key":"numbers2","status":"changed","oldValue":[2,3,4,5],"newValue":[22,33,44,55]},
+                  {"key":"numbers3","status":"removed","oldValue":[3,4,5],"newValue":null},
+                  {"key":"numbers4","status":"added","oldValue":null,"newValue":[4,5,6]},
+                  {"key":"obj1","status":"added","oldValue":null,"newValue":{"nestedKey":"value","isNested":true}},
+                  {"key":"setting1","status":"changed","oldValue":"Some value","newValue":"Another value"},
+                  {"key":"setting2","status":"changed","oldValue":200,"newValue":300},
+                  {"key":"setting3","status":"changed","oldValue":true,"newValue":"none"}
+                ]
+                """;
+
+        JsonNode expectedTree = MAPPER.readTree(expected);
+        JsonNode actualTree = MAPPER.readTree(actual);
+        assertEquals(expectedTree, actualTree);
+    }
+
+    @Test
+    void testJsonFormatterWithYamlFiles() throws Exception {
+        String file1 = "src/test/resources/file1.yml";
+        String file2 = "src/test/resources/file2.yml";
+
+        String actual = Differ.generate(file1, file2, "json");
+        assertNotNull(actual);
+
+        String expected = """
+                [
+                  {"key":"chars1","status":"unchanged","oldValue":["a","b","c"],"newValue":["a","b","c"]},
+                  {"key":"chars2","status":"changed","oldValue":["d","e","f"],"newValue":false},
+                  {"key":"checked","status":"changed","oldValue":false,"newValue":true},
+                  {"key":"default","status":"changed","oldValue":null,"newValue":["value1","value2"]},
+                  {"key":"id","status":"changed","oldValue":45,"newValue":null},
+                  {"key":"key1","status":"removed","oldValue":"value1","newValue":null},
+                  {"key":"key2","status":"added","oldValue":null,"newValue":"value2"},
+                  {"key":"numbers1","status":"unchanged","oldValue":[1,2,3,4],"newValue":[1,2,3,4]},
+                  {"key":"numbers2","status":"changed","oldValue":[2,3,4,5],"newValue":[22,33,44,55]},
+                  {"key":"numbers3","status":"removed","oldValue":[3,4,5],"newValue":null},
+                  {"key":"numbers4","status":"added","oldValue":null,"newValue":[4,5,6]},
+                  {"key":"obj1","status":"added","oldValue":null,"newValue":{"nestedKey":"value","isNested":true}},
+                  {"key":"setting1","status":"changed","oldValue":"Some value","newValue":"Another value"},
+                  {"key":"setting2","status":"changed","oldValue":200,"newValue":300},
+                  {"key":"setting3","status":"changed","oldValue":true,"newValue":"none"}
+                ]
+                """;
+
+        JsonNode expectedTree = MAPPER.readTree(expected);
+        JsonNode actualTree = MAPPER.readTree(actual);
+        assertEquals(expectedTree, actualTree);
     }
 }

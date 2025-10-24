@@ -14,6 +14,6 @@ public class Differ {
 
         List<DiffEntry> diff = DiffBuilder.build(data1, data2);
 
-        return Formatter.format(format, diff);
+        return Formatter.format(diff, format);
     }
 }

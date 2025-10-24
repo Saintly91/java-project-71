@@ -3,15 +3,17 @@ package hexlet.code;
 import java.util.List;
 
 public class Formatter {
-    public static String format(String formatName, List<DiffEntry> diff) throws Exception {
-        String name = (formatName == null || formatName.isBlank())
+
+    public static String format(List<DiffEntry> diff, String formatName) throws Exception {
+        String normalized = (formatName == null || formatName.isBlank())
                 ? "stylish"
                 : formatName.toLowerCase();
 
-        return  switch (formatName) {
+        return switch (normalized) {
             case "plain" -> PlainFormatter.format(diff);
             case "stylish" -> StylishFormatter.format(diff);
-            default -> throw new Exception();
+            case "json" -> JsonFormatter.format(diff);
+            default -> throw new IllegalArgumentException("Unknown format: " + normalized);
         };
     }
 }
