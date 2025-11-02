@@ -21,6 +21,7 @@ public class StylishFormatter {
                     sb.append("  - ").append(key).append(": ").append(stringify(oldV)).append("\n");
                     sb.append("  + ").append(key).append(": ").append(stringify(newV)).append("\n");
                 }
+                default -> throw new IllegalStateException("Unexpected status: " + st);
             }
         }
         sb.append("}");

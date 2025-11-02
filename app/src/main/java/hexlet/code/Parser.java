@@ -4,25 +4,29 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 
-public class Parser {
+public final class Parser {
 
-    public static Map<String, Object> parse(String filePath) throws IOException {
-        String content = Files.readString(Path.of(filePath));
+    private Parser() {
+    }
 
-        ObjectMapper mapper;
-        if (filePath.endsWith(".json")) {
-            mapper = new ObjectMapper();
-        } else if (filePath.endsWith(".yml") || filePath.endsWith(".yaml")) {
-            mapper = new ObjectMapper(new YAMLFactory()); // YAML
-        } else {
-            throw new IllegalArgumentException("Unsupported file format: " + filePath);
+    public static Map<String, Object> parse(String content, String format) {
+        try {
+            ObjectMapper mapper;
+
+            if ("json".equals(format)) {
+                mapper = new ObjectMapper();
+            } else if ("yml".equals(format) || "yaml".equals(format)) {
+                mapper = new ObjectMapper(new YAMLFactory());
+            } else {
+                throw new RuntimeException("Unknown format: " + format);
+            }
+
+            return mapper.readValue(content, new TypeReference<>() {
+            });
+        } catch (Exception e) {
+            throw new RuntimeException("Parsing error: " + e.getMessage(), e);
         }
-
-        return mapper.readValue(content, new TypeReference<>() {});
     }
 }

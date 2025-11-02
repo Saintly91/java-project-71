@@ -3,7 +3,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.Differ;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DifferTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -90,20 +91,20 @@ public class DifferTest {
         String file2 = "src/test/resources/file2.json";
 
         String expected = """
-        Property 'chars2' was updated. From [complex value] to false
-        Property 'checked' was updated. From false to true
-        Property 'default' was updated. From null to [complex value]
-        Property 'id' was updated. From 45 to null
-        Property 'key1' was removed
-        Property 'key2' was added with value: 'value2'
-        Property 'numbers2' was updated. From [complex value] to [complex value]
-        Property 'numbers3' was removed
-        Property 'numbers4' was added with value: [complex value]
-        Property 'obj1' was added with value: [complex value]
-        Property 'setting1' was updated. From 'Some value' to 'Another value'
-        Property 'setting2' was updated. From 200 to 300
-        Property 'setting3' was updated. From true to 'none'
-        """;
+                Property 'chars2' was updated. From [complex value] to false
+                Property 'checked' was updated. From false to true
+                Property 'default' was updated. From null to [complex value]
+                Property 'id' was updated. From 45 to null
+                Property 'key1' was removed
+                Property 'key2' was added with value: 'value2'
+                Property 'numbers2' was updated. From [complex value] to [complex value]
+                Property 'numbers3' was removed
+                Property 'numbers4' was added with value: [complex value]
+                Property 'obj1' was added with value: [complex value]
+                Property 'setting1' was updated. From 'Some value' to 'Another value'
+                Property 'setting2' was updated. From 200 to 300
+                Property 'setting3' was updated. From true to 'none'
+                """;
 
         String result = Differ.generate(file1, file2, "plain");
         assertEquals(expected.trim(), result.trim());
@@ -173,5 +174,43 @@ public class DifferTest {
         JsonNode expectedTree = MAPPER.readTree(expected);
         JsonNode actualTree = MAPPER.readTree(actual);
         assertEquals(expectedTree, actualTree);
+    }
+
+    // --- Добавленные тесты для покрытия 2×4 ---
+
+    @Test
+    void testDefaultFormatterWithJsonFiles() throws Exception {
+        String file1 = "src/test/resources/file1.json";
+        String file2 = "src/test/resources/file2.json";
+
+        String resultDefault = Differ.generate(file1, file2);
+        String resultStylish = Differ.generate(file1, file2, "stylish");
+
+        assertEquals(resultStylish.trim(), resultDefault.trim());
+    }
+
+    @Test
+    void testPlainFormatterWithYamlFiles() throws Exception {
+        String file1 = "src/test/resources/file1.yml";
+        String file2 = "src/test/resources/file2.yml";
+
+        String resultYamlPlain = Differ.generate(file1, file2, "plain");
+        String resultJsonPlain = Differ.generate("src/test/resources/file1.json",
+                "src/test/resources/file2.json",
+                "plain");
+
+        // plain-формат не зависит от входного формата
+        assertEquals(resultJsonPlain.trim(), resultYamlPlain.trim());
+    }
+
+    @Test
+    void testDefaultFormatterWithYamlFiles() throws Exception {
+        String file1 = "src/test/resources/file1.yml";
+        String file2 = "src/test/resources/file2.yml";
+
+        String resultDefault = Differ.generate(file1, file2);
+        String resultStylish = Differ.generate(file1, file2, "stylish");
+
+        assertEquals(resultStylish.trim(), resultDefault.trim());
     }
 }
